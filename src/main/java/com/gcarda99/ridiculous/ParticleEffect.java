@@ -1,6 +1,5 @@
 package com.gcarda99.ridiculous;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.VisualPosition;
 
@@ -34,18 +33,22 @@ public class ParticleEffect {
     }
 
     private static void doTrigger(Editor editor, int offset) {
-        JComponent editorComponent = editor.getContentComponent();
+        System.out.println("[Ridiculous] doTrigger called on EDT: " + SwingUtilities.isEventDispatchThread());
 
-        // Use the root pane's layered pane for proper overlay (above all editor layers)
+        JComponent editorComponent = editor.getContentComponent();
         JRootPane rootPane = SwingUtilities.getRootPane(editorComponent);
-        if (rootPane == null) return;
+        if (rootPane == null) {
+            System.out.println("[Ridiculous] ERROR: rootPane is null!");
+            return;
+        }
 
         JLayeredPane layeredPane = rootPane.getLayeredPane();
+        System.out.println("[Ridiculous] layeredPane size: " + layeredPane.getSize());
 
-        // Convert caret position to layered pane coordinates
         VisualPosition visualPos = editor.offsetToVisualPosition(offset);
         Point caretInEditor = editor.visualPositionToXY(visualPos);
         Point caretInLayered = SwingUtilities.convertPoint(editorComponent, caretInEditor, layeredPane);
+        System.out.println("[Ridiculous] Caret position in layeredPane: " + caretInLayered);
 
         List<int[]> velocities = new ArrayList<>();
         List<Color> particleColors = new ArrayList<>();
@@ -67,6 +70,7 @@ public class ParticleEffect {
         ParticleOverlay overlay = new ParticleOverlay(layeredPane, px, py, velocities, particleColors);
         layeredPane.add(overlay, JLayeredPane.POPUP_LAYER);
         layeredPane.setComponentZOrder(overlay, 0);
+        System.out.println("[Ridiculous] Overlay added to layeredPane");
 
         int[] step = {0};
         Timer timer = new Timer(16, null);
@@ -81,12 +85,13 @@ public class ParticleEffect {
             overlay.setAlpha(alpha);
             for (int i = 0; i < PARTICLE_COUNT; i++) {
                 px[i] += velocities.get(i)[0];
-                py[i] += velocities.get(i)[1] + 1; // gravity
+                py[i] += velocities.get(i)[1] + 1;
             }
             overlay.updatePositions(px, py);
             layeredPane.repaint(overlay.getBounds());
             step[0]++;
         });
         timer.start();
+        System.out.println("[Ridiculous] Animation timer started");
     }
 }

@@ -13,12 +13,16 @@ public class RidiculousTypingListener implements EditorFactoryListener {
     @Override
     public void editorCreated(@NotNull EditorFactoryEvent event) {
         Editor editor = event.getEditor();
+        System.out.println("[Ridiculous] editorCreated: " + editor);
 
         editor.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void documentChanged(@NotNull DocumentEvent e) {
+                System.out.println("[Ridiculous] documentChanged! newLength=" + e.getNewLength());
                 if (e.getNewLength() > 0) {
-                    ParticleEffect.trigger(editor, editor.getCaretModel().getOffset());
+                    int offset = editor.getCaretModel().getOffset();
+                    System.out.println("[Ridiculous] Triggering particle at offset=" + offset);
+                    ParticleEffect.trigger(editor, offset);
                 }
             }
         });
