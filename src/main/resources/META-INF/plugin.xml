@@ -13,7 +13,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-            serviceImplementation="com.gcarda99.ridiculous.RidiculousService"/>
+            serviceImplementation="com.gcarda99.ridiculous.RidiculousService"
+            preload="true"/>
     </extensions>
 
 </idea-plugin>
