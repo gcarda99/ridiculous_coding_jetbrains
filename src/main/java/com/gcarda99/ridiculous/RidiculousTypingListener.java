@@ -16,18 +16,22 @@ public class RidiculousTypingListener implements EditorFactoryListener {
                 int offset = editor.getCaretModel().getOffset();
 
                 if (e.getNewLength() > 0 && e.getOldLength() == 0) {
-                    // Typed a character
-                    boolean isNewline = e.getNewFragment().toString().contains("\n");
+                    String newText = e.getNewFragment().toString();
+                    boolean isNewline = newText.contains("\n");
+
                     if (isNewline) {
                         NewlineEffect.trigger(editor, offset);
+                        KeyLabelEffect.trigger(editor, offset, "\u23ce"); // ⏎ return symbol
                         ScreenShake.trigger(editor, 80, 4);
                     } else {
                         BlipEffect.trigger(editor, offset);
+                        KeyLabelEffect.trigger(editor, offset, newText.trim().isEmpty() ? "\u2423" : newText); // ␣ = space symbol
                         ScreenShake.trigger(editor, 50, 3);
                     }
+
                 } else if (e.getOldLength() > 0 && e.getNewLength() == 0) {
-                    // Deleted a character (backspace/delete)
                     BoomEffect.trigger(editor, offset);
+                    KeyLabelEffect.trigger(editor, offset, "\u232b"); // ⌫ = backspace symbol
                     ScreenShake.trigger(editor, 150, 8);
                 }
             }
