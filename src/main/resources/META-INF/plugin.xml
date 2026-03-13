@@ -1,0 +1,21 @@
+<idea-plugin>
+    <id>com.gcarda99.ridiculous-coding</id>
+    <name>Ridiculous Coding</name>
+    <vendor email="your@email.com" url="https://github.com/gcarda99/ridiculous_coding_jetbrains">gcarda99</vendor>
+
+    <description><![CDATA[
+        Makes your coding experience <b>ridiculous</b>.
+        Adds fun visual particle and explosion effects to every keystroke.
+        Inspired by <a href="https://github.com/jotson/ridiculous_coding">ridiculous_coding for VS Code</a>.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+
+    <applicationListeners>
+        <listener class="com.gcarda99.ridiculous.RidiculousTypingListener"
+                  topic="com.intellij.openapi.editor.event.EditorFactoryListener"/>
+    </applicationListeners>
+</idea-plugin>
